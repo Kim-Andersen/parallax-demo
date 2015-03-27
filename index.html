@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head lang="en">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style type="text/css">
+    	html, body {padding:0;margin:0;}
+    	body {
+    		height:4000px;
+    		background:url('https://foomandoonian.files.wordpress.com/2011/02/black-wallpaper-png-scaled-1000.jpg') no-repeat;
+    		background-size: 100% auto;
+    	}
+
+    	.parallax-elem {
+    		position:absolute;
+    	}
+    	#img1 {
+    		width:100%;
+    		top:300px;
+    		z-index: 1;
+    	}
+    	#img2 {
+    		width:100%;
+    		top:600px;
+    		z-index: 2;
+    	}
+    	#img3 {
+    		width:100%;
+    		top:1000px;
+    		z-index: 3;
+    	}
+    	#imgMario {
+    		top:500px;
+    		left:-250px;
+    		z-index: 100;
+    	}
+    	#imgLittleBigPlanet {
+    		top:700px;
+    		right:200px;
+    		z-index: 101;
+    	}
+    </style>
+  </head>
+  <body>
+
+  	<img id="img1" class="parallax-elem" src="http://www.phototravelpages.com/wallpapers/field_3_1152.jpg" />
+  	<img id="img2" class="parallax-elem" src="http://rack.0.mshcdn.com/media/ZgkyMDEyLzEyLzA0L2M4LzE1dmludGFnZXZpLmI3ai5qcGcKcAl0aHVtYgk5NTB4NTM0IwplCWpwZw/13d2b706/150/15-vintage-video-games-you-can-play-on-your-iphone-50767f01d9.jpg" />
+  	<img id="img3" class="parallax-elem" src="http://www.kellegous.com/s/b/00cf.jpg"(>
+  	<img id="imgMario" class="parallax-elem" src="http://img2.wikia.nocookie.net/__cb20120123161027/ssb/images/archive/2/29/20120123163646!MarioBrawlArtwork.png"/>
+  	<img id="imgLittleBigPlanet" class="parallax-elem" src="http://static.giantbomb.com/uploads/square_small/8/82962/1967640-sackboy_happy.png"/>
+
+  	<script language="javascript" src="libs/jquery-1.11.2.min.js"></script>
+  	<script language="javascript">
+  	var parallaxConfig = [
+  		{
+  			selector: '#img1',
+  			ySpeed: 0.5
+  		},
+  		{
+  			selector: '#img2',
+  			ySpeed: .2
+  		},
+  		{
+  			selector: '#img3',
+  			ySpeed: 3
+  		},
+  		{
+  			selector: '#imgMario',
+  			ySpeed: 0.05,
+  			xSpeed: 1
+  		},
+  		{selector: '#imgLittleBigPlanet', ySpeed: 0.4, xSpeed: -.5, scale: .05, rotate: {speed: .3}}
+  	];
+
+  	$(function(){
+			initParallax(parallaxConfig);  		
+  	});
+
+  	function initParallax(config){
+  		var parallaxElems = [],
+  				$window = $(window);
+
+  		$.each(config, function(){
+  			this.$elem = $(this.selector);
+  			parallaxElems.push(this);
+  		});
+
+  		var updateParallax = function(){
+  			var scrollY = $window.scrollTop();
+	  			
+  			$.each(parallaxElems, function(){
+  				var transforms = [],
+  						y = (scrollY*this.ySpeed*-1)+'px',
+  						x = '0px';
+
+  				if(this.xSpeed){
+  					x = (scrollY*this.xSpeed)+'px';
+  				}
+  				
+  				transforms.push('translate3d('+x+','+y+', 0px)');
+
+  				if(this.scale){
+  					transforms.push('scale('+this.scale * scrollY/20+')');
+  				}
+
+  				if(this.rotate){
+  					transforms.push('rotate('+((scrollY*this.rotate.speed) % 360)+'deg)');
+  				}
+
+  				this.$elem.css('transform', transforms.join(' '));
+  			});
+  		}
+
+  		$window.on('scroll', function(){
+  			window.requestAnimationFrame(debounce(updateParallax, 5));
+  		});
+  	}
+
+  	function debounce(fn, delay) {
+		  var timer = null;
+		  return function () {
+		    var context = this, 
+		    		args = arguments;
+		    clearTimeout(timer);
+		    timer = setTimeout(function () {
+		      fn.apply(context, args);
+		    }, delay);
+		  };
+		}
+  	</script>
+
+  </body>
+</html>
